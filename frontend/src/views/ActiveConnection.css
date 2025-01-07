@@ -1,0 +1,145 @@
+.container {
+  padding: 12px;
+}
+
+.n-data-table {
+  margin-top: 12px;
+}
+
+.n-card {
+  margin-bottom: 12px;
+}
+
+/* 添加表格容器样式 */
+.table-container {
+  margin-top: 12px;
+  border: 1px solid #eee;
+  border-radius: 3px;
+}
+
+/* 确保表格内容可见 */
+:deep(.n-data-table-wrapper) {
+  width: 100%;
+}
+
+:deep(.n-data-table-base-table) {
+  width: 100%;
+}
+
+/* 数据库统计布局 */
+.database-stats {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.info-card {
+  flex-shrink: 0;
+  margin-bottom: 0;
+  padding: 12px;
+}
+
+.chart-container {
+  flex: 1;
+  min-height: 400px;
+  margin-top: 12px;
+  max-height: 600px;
+}
+
+.stat-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 16px;
+  border-right: 1px solid #eee;
+}
+
+.stat-item:last-child {
+  border-right: none;
+}
+
+.stat-item .label {
+  color: #666;
+  font-size: 14px;
+}
+
+.stat-item .value {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+}
+
+/* 主内容区域 */
+.main-content {
+  display: flex;
+  gap: 12px;
+  flex: 1;
+  min-height: 0;
+}
+
+/* 左侧菜单 */
+.sidebar {
+  width: 200px;
+  flex-shrink: 0;
+}
+
+.sidebar .n-card {
+  height: 100%;
+}
+
+/* 右侧内容区域 */
+.content {
+  flex: 1;
+  min-width: 0;
+}
+
+.content .n-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 标签页内容区域 */
+:deep(.n-tabs) {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+:deep(.n-tab-pane) {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* 表格容器 */
+.table-wrapper {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+
+/* 表格 */
+:deep(.n-table) {
+  flex: 1;
+  width: fit-content;
+  min-width: 100%;
+}
+
+/* 分页器 */
+:deep(.n-pagination) {
+  margin-top: 8px;
+  flex-shrink: 0;
+  padding: 0 8px;
+}
+
+/* 表格滚动容器 */
+:deep(.n-scrollbar) {
+  max-height: 100%;
+}
+
+:deep(.n-scrollbar-container) {
+  max-height: 100%;
+}

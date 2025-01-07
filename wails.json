@@ -1,0 +1,25 @@
+{
+  "$schema": "https://wails.io/schemas/config.v2.json",
+  "name": "AuroraDB",
+  "outputfilename": "AuroraDB",
+  "frontend:install": "npm install",
+  "frontend:build": "npm run build",
+  "frontend:dev:watcher": "npm run dev",
+  "frontend:dev:serverUrl": "auto",
+  "author": {
+    "name": "夜光",
+    "email": "yeguangzhang@126.com"
+  },
+  "info": {
+    "name": "AuroraDB",
+    "productName": "夜光",
+    "windows": {
+      "hideWindowOnClose": false,
+      "windowIsTranslucent": false,
+      "hideWindowOnMinimize": false
+    },
+    "mac": {
+      "LSUIElement": true
+    }
+  }
+}

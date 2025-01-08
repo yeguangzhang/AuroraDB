@@ -17,12 +17,34 @@
   border-radius: 3px;
 }
 
-/* 确保表格内容可见 */
+/* 表格列宽设置 */
+:deep(.n-data-table) {
+  width: 100%;
+  min-width: 100%;
+}
+
 :deep(.n-data-table-wrapper) {
   width: 100%;
+  min-width: 100%;
 }
 
 :deep(.n-data-table-base-table) {
+  width: 100%;
+  table-layout: auto;
+}
+
+:deep(.n-data-table-thead) {
+  width: 100%;
+}
+
+:deep(.n-data-table-th),
+:deep(.n-data-table-td) {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+:deep(.n-data-table-tr) {
   width: 100%;
 }
 
@@ -31,7 +53,7 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  /*gap: 16px;*/
 }
 
 .info-card {
@@ -43,8 +65,40 @@
 .chart-container {
   flex: 1;
   min-height: 400px;
-  margin-top: 12px;
-  max-height: 600px;
+  max-height: 480px;
+  position: relative;
+  border: 1px solid #eee;
+  background: #f8f8f8;
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.chart-container.loading {
+  opacity: 0.8;
+}
+
+.chart-container .echarts {
+  width: 100%;
+  height: 100%;
+}
+
+.chart-container .loading-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.chart-container .loading-text {
+  font-size: 14px;
+  color: #666;
 }
 
 .stat-item {
@@ -115,7 +169,6 @@
 
 /* 表格容器 */
 .table-wrapper {
-  height: 100%;
   display: flex;
   flex-direction: column;
   overflow: auto;

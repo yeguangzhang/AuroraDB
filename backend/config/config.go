@@ -2,6 +2,7 @@ package config
 
 import (
 	"encoding/json"
+	"errors"
 	"os"
 	"path/filepath"
 )
@@ -79,4 +80,18 @@ func SaveConfig(config *Config) error {
 	}
 
 	return os.WriteFile(configPath, data, 0644)
+}
+
+func GetConfig(configName string) (*DBConfig, error) {
+	cfg, err := LoadConfig()
+	if err != nil {
+		return nil, err
+	}
+	for _, connection := range cfg.Connections {
+		if configName == connection.Name {
+			return &connection, nil
+		}
+	}
+	return nil, errors.New("config not found")
+
 }

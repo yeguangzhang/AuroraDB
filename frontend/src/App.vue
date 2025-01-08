@@ -3,29 +3,29 @@
     <n-message-provider>
       <n-layout style="height: 100vh">
         <!-- 顶部 -->
-        <n-layout-header bordered style="height: 48px; padding: 0">
-          <div class="header-content">
-            <div class="header-left">
-              <n-button quaternary circle @click="collapsed = !collapsed">
-                <template #icon>
-                  <n-icon>
-                    <menu-fold-outlined v-if="collapsed" />
-                    <menu-unfold-outlined v-else />
-                  </n-icon>
-                </template>
-              </n-button>
-              <div class="header-title">AuroraDB</div>
-            </div>
-            <n-button quaternary circle size="small">
-              <template #icon>
-                <n-icon><setting-outlined /></n-icon>
-              </template>
-            </n-button>
-          </div>
-        </n-layout-header>
+<!--        <n-layout-header bordered style="height: 48px; padding: 0">-->
+<!--          <div class="header-content">-->
+<!--            <div class="header-left">-->
+<!--              <n-button quaternary circle @click="collapsed = !collapsed">-->
+<!--                <template #icon>-->
+<!--                  <n-icon>-->
+<!--                    <menu-fold-outlined v-if="collapsed" />-->
+<!--                    <menu-unfold-outlined v-else />-->
+<!--                  </n-icon>-->
+<!--                </template>-->
+<!--              </n-button>-->
+<!--              <div class="header-title">AuroraDB</div>-->
+<!--            </div>-->
+<!--            <n-button quaternary circle size="small">-->
+<!--              <template #icon>-->
+<!--                <n-icon><setting-outlined /></n-icon>-->
+<!--              </template>-->
+<!--            </n-button>-->
+<!--          </div>-->
+<!--        </n-layout-header>-->
 
         <!-- 中间主体 -->
-        <n-layout has-sider position="absolute" style="top: 48px; bottom: 32px">
+        <n-layout has-sider position="absolute" style="top: 0; bottom: 32px">
           <n-layout-sider
             bordered
             show-trigger

@@ -4,7 +4,7 @@
     <n-card size="small">
       <n-space align="center" justify="space-between">
         <n-select v-model:value="currentDatabase" :options="databaseOptions" @update:value="handleDatabaseChange"
-          style="width: 200px" />
+                  style="width: 200px"/>
         <n-space>
           <n-tag :type="getStatusType(connectionStatus)">
             {{ connectionStatus }}
@@ -21,20 +21,20 @@
       <!-- 左侧菜单 -->
       <div class="sidebar">
         <n-card size="small" :bordered="false">
-<n-menu
-  v-model:value="selectedTable"
-  :options="tableMenuOptions"
-  @update:value="handleTableSelect"
->
-  <template #default="{ option }">
-    <n-tooltip placement="right">
-      <template #trigger>
-        <span>{{ option.label }}</span>
-      </template>
-      {{ option.label }}
-    </n-tooltip>
-  </template>
-</n-menu>
+          <n-menu
+              v-model:value="selectedTable"
+              :options="tableMenuOptions"
+              @update:value="handleTableSelect"
+          >
+            <template #default="{ option }">
+              <n-tooltip placement="right">
+                <template #trigger>
+                  <span>{{ option.label }}</span>
+                </template>
+                {{ option.label }}
+              </n-tooltip>
+            </template>
+          </n-menu>
         </n-card>
       </div>
 
@@ -45,84 +45,87 @@
           <div v-if="!selectedTable" class="database-stats">
 
             <n-space justify="space-around">
-                <div class="stat-item">
-                  <span class="label">数据库名称：</span>
-                  <span class="value">{{ currentDatabase }}</span>
-                </div>
-                <div class="stat-item">
-                  <span class="label">表数量：</span>
-                  <span class="value">{{ tables.length }}</span>
-                </div>
-                <div class="stat-item">
-                  <span class="label">总记录数：</span>
-                  <span class="value">{{ totalRecords }}</span>
-                </div>
-              </n-space>
-              <n-divider />
+              <div class="stat-item">
+                <span class="label">数据库名称：</span>
+                <span class="value">{{ currentDatabase }}</span>
+              </div>
+              <div class="stat-item">
+                <span class="label">表数量：</span>
+                <span class="value">{{ tables.length }}</span>
+              </div>
+              <div class="stat-item">
+                <span class="label">总记录数：</span>
+                <span class="value">{{ totalRecords }}</span>
+              </div>
+            </n-space>
+            <n-divider/>
             <div ref="recordsChartRef" class="chart-container"></div>
           </div>
-          
+
           <n-tabs v-model:value="activeTab" v-else>
             <n-tab-pane name="data" tab="数据预览">
               <div class="table-wrapper">
-                <n-table
-                  v-if="tableColumns.length > 0"
-                  :bordered="true"
-                  :single-line="false"
+                <n-data-table
+                    v-if="tableColumns.length > 0"
+                    :bordered="true"
+                    :single-line="false"
+                    size="small"
+                    :columns="tableColumns"
+                    :data="tableData"
                 >
-                  <thead>
-                    <tr>
-                      <th v-for="col in tableColumns" :key="col.key">
-                        {{ col.title }}
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="(row, index) in tableData" :key="index">
-                      <td v-for="(col, colIndex) in tableColumns" :key="colIndex">
-                        {{ Array.isArray(row) ? row[colIndex] : row[col.key] }}
-                      </td>
-                    </tr>
-                  </tbody>
-                </n-table>
+<!--                  <thead>-->
+<!--                  <tr>-->
+<!--                    <th v-for="col in tableColumns" :key="col.key" :minWidth="50">-->
+<!--                      {{ col.title }}-->
+<!--                    </th>-->
+<!--                  </tr>-->
+<!--                  </thead>-->
+<!--                  <tbody>-->
+<!--                  <tr v-for="(row, index) in tableData" :key="index">-->
+<!--                    <td v-for="(col, colIndex) in tableColumns" :key="colIndex" :minWidth="50">-->
+<!--                      {{ Array.isArray(row) ? row[colIndex] : row[col.key] }}-->
+<!--                    </td>-->
+<!--                  </tr>-->
+<!--                  </tbody>-->
+                </n-data-table>
                 <n-pagination
-                  v-if="total > 0"
-                  v-model:page="currentPage"
-                  v-model:page-size="pageSize"
-                  :item-count="total"
-                  :page-sizes="[10, 20, 50, 100]"
-                  show-size-picker
-                  show-quick-jumper
-                  @update:page="handlePageChange"
-                  @update:page-size="handlePageSizeChange"
+                    v-if="total > 0"
+                    v-model:page="currentPage"
+                    v-model:page-size="pageSize"
+                    :item-count="total"
+                    :page-sizes="[10, 20, 50, 100]"
+                    show-size-picker
+                    show-quick-jumper
+                    @update:page="handlePageChange"
+                    @update:page-size="handlePageSizeChange"
                 />
-                <n-empty v-else description="无数据" />
+                <n-empty v-else description="无数据"/>
               </div>
             </n-tab-pane>
-            
+
             <n-tab-pane name="structure" tab="表结构">
               <div class="table-wrapper">
                 <n-table
-                  :bordered="true"
-                  :single-line="false"
+                    :bordered="true"
+                    :single-line="false"
                 >
                   <thead>
-                    <tr>
-                      <th>字段名</th>
-                      <th>类型</th>
-                      <th>允许空</th>
-                      <th>默认值</th>
-                      <th>备注</th>
-                    </tr>
+                  <tr>
+                    <th>字段名</th>
+                    <th>类型</th>
+                    <th>允许空</th>
+                    <th>默认值</th>
+                    <th>备注</th>
+                  </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="(item, index) in tableStructure" :key="index">
-                      <td>{{ item.name }}</td>
-                      <td>{{ item.type }}</td>
-                      <td>{{ item.nullable }}</td>
-                      <td>{{ item.default || '-' }}</td>
-                      <td>{{ item.comment || '-' }}</td>
-                    </tr>
+                  <tr v-for="(item, index) in tableStructure" :key="index">
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.type }}</td>
+                    <td>{{ item.nullable }}</td>
+                    <td>{{ item.default || '-' }}</td>
+                    <td>{{ item.comment || '-' }}</td>
+                  </tr>
                   </tbody>
                 </n-table>
               </div>
@@ -135,23 +138,22 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { useMessage ,NTooltip} from 'naive-ui'
-import { h } from 'vue'
+import {computed, h, nextTick, onMounted, onUnmounted, ref} from 'vue'
+import {useRoute, useRouter} from 'vue-router'
+import {NTooltip,NEllipsis,NDataTable, useMessage} from 'naive-ui'
 import * as echarts from 'echarts'
 import {
   DisconnectDatabase,
   GetDatabases,
-  GetTables,
-  UseDatabase,
-  GetTableStats,
   GetTableData,
-  GetTableStructure
+  GetTables,
+  GetTableStats,
+  GetTableStructure,
+  UseDatabase
 } from '../../wailsjs/go/main/App'
-import { EventsOn, EventsOff } from '../../wailsjs/runtime/runtime'
-import { useMenuStore } from '../stores/menuStore'
-import { TableOutlined } from '@vicons/antd'
+import {EventsOff, EventsOn} from '../../wailsjs/runtime/runtime'
+import {useMenuStore} from '../stores/menuStore'
+import {TableOutlined} from '@vicons/antd'
 
 const route = useRoute()
 const router = useRouter()
@@ -211,11 +213,11 @@ const handlePageSizeChange = (size) => {
 
 // 表结构列定义
 const structureColumns = ref([
-  { title: '字段名', key: 'name' },
-  { title: '类型', key: 'type' },
-  { title: '允许空', key: 'nullable' },
-  { title: '默认值', key: 'default' },
-  { title: '备注', key: 'comment' }
+  {title: '字段名', key: 'name'},
+  {title: '类型', key: 'type'},
+  {title: '允许空', key: 'nullable'},
+  {title: '默认值', key: 'default'},
+  {title: '备注', key: 'comment'}
 ])
 
 // 数据库选项
@@ -229,7 +231,8 @@ const databaseOptions = computed(() => {
 // 表菜单选项
 const tableMenuOptions = computed(() => {
   return tables.value.map(table => ({
-    label: table.name,
+    label: () => h(NEllipsis, null, { default: () => table.name }),
+    // label: table.name,
     key: table.name,
     icon: renderIcon(TableOutlined)
   }))
@@ -265,19 +268,19 @@ async function handleDatabaseChange(dbName) {
 // 处理表选择
 async function handleTableSelect(tableName) {
   if (!tableName) return
-  
+
   selectedTable.value = tableName
   activeTab.value = 'data' // 重置为数据预览标签
-  
+
   try {
     // 确保已经连接到数据库
     if (!connectionName.value) {
       throw new Error('未连接到数据库')
     }
-    
+
     loading.value = true
     currentPage.value = 1 // 重置页码
-    
+
     // 加载数据
     await Promise.all([
       loadTableData(tableName),
@@ -296,14 +299,14 @@ async function loadTableData(tableName) {
   try {
     loading.value = true
     console.log('Loading table data for:', tableName)
-    
+    tableData.value=[]
     const result = await GetTableData(
-      connectionName.value,
-      tableName,
-      {
-        page: currentPage.value,
-        pageSize: pageSize.value
-      }
+        connectionName.value,
+        tableName,
+        {
+          page: currentPage.value,
+          pageSize: pageSize.value
+        }
     )
 
     console.log('Received data:', result)
@@ -319,11 +322,24 @@ async function loadTableData(tableName) {
     // 设置列
     tableColumns.value = result.columns.map(col => ({
       title: col.title || col.key,
-      key: col.key
+      key: col.key,
+      resizable: true,
+      minWidth: 50,
+      maxWidth: 150,
+      width: 'auto'
     }))
+    for (let i = 0; i < result.data.length; i++) {
+      let row = result.data[i]
+      let rowData = {}
+      for (let j = 0; j < row.length; j++) {
+        let key_ = tableColumns.value[j].key
+        rowData[key_]=row[j]
+      }
+      tableData.value.push(rowData)
 
+    }
     // 设置数据 - 直接使用数组格式
-    tableData.value = result.data
+    // tableData.value = result.data
     total.value = result.total || 0
 
   } catch (error) {
@@ -342,9 +358,9 @@ async function loadTableStructure(tableName) {
   try {
     console.log('Loading structure for:', tableName)
     const structure = await GetTableStructure(
-      connectionName.value,
-      currentDatabase.value,
-      tableName
+        connectionName.value,
+        currentDatabase.value,
+        tableName
     )
     console.log('Received structure:', structure)
     tableStructure.value = structure || []
@@ -359,9 +375,9 @@ async function loadTableStructure(tableName) {
 async function loadTableStats(tableName) {
   try {
     tableStats.value = await GetTableStats(
-      connectionName.value,
-      currentDatabase.value,
-      tableName
+        connectionName.value,
+        currentDatabase.value,
+        tableName
     )
   } catch (error) {
     message.error('加载表统计失败：' + error)
@@ -382,93 +398,136 @@ async function loadDatabaseStats() {
   }
 }
 
-// 初始化图表
-function initChart() {
-  console.log('初始化图表...')
-  console.log('图表容器:', recordsChartRef.value)
-  console.log('统计数据:', tableStats.value)
+  // 初始化图表
+  function initChart() {
+    console.log('初始化图表...')
+    console.log('图表容器:', recordsChartRef.value)
+    console.log('统计数据:', tableStats.value)
 
-  if (!recordsChartRef.value) {
-    console.error('图表容器未找到')
-    return
-  }
-
-  if (recordsChart) {
-    console.log('销毁旧图表实例')
-    recordsChart.dispose()
-  }
-
-  recordsChart = echarts.init(recordsChartRef.value)
-  
-  // 添加resize监听
-  window.addEventListener('resize', () => {
-    if (recordsChart) {
-      console.log('窗口大小改变，重新调整图表')
-      recordsChart.resize()
+    if (!recordsChartRef.value) {
+      console.error('图表容器未找到')
+      return
     }
+
+    // 确保容器可见
+    recordsChartRef.value.classList.remove('loading')
+
+    if (recordsChart) {
+      console.log('销毁旧图表实例')
+      recordsChart.dispose()
+    }
+
+    recordsChart = echarts.init(recordsChartRef.value)
+
+    // 添加resize监听
+    const resizeObserver = new ResizeObserver(() => {
+      if (recordsChart) {
+        console.log('容器大小改变，重新调整图表')
+        recordsChart.resize()
+      }
+    })
+    resizeObserver.observe(recordsChartRef.value)
+
+    if (!tableStats.value || tableStats.value.length === 0) {
+      console.error('没有可用的统计数据')
+      recordsChartRef.value.classList.add('loading')
+      return
+    }
+
+    // 添加加载动画
+    recordsChart.showLoading({
+      text: '正在加载数据...',
+      color: '#409EFF',
+      textColor: '#000',
+      maskColor: 'rgba(255, 255, 255, 0.8)',
+      zlevel: 0
+    })
+
+    // 设置超时检查
+    const timeout = setTimeout(() => {
+      if (!recordsChartRef.value.querySelector('.echarts')) {
+        console.warn('图表初始化超时')
+        recordsChartRef.value.classList.add('loading')
+      }
+    }, 5000)
+
+  // 添加加载动画
+  recordsChart.showLoading({
+    text: '正在加载数据...',
+    color: '#409EFF',
+    textColor: '#000',
+    maskColor: 'rgba(255, 255, 255, 0.8)',
+    zlevel: 0
   })
 
-  if (!tableStats.value || tableStats.value.length === 0) {
-    console.error('没有可用的统计数据')
-    return
+  const option = {
+    title: {
+      text: '数据库表记录统计',
+      left: 'center',
+      top: 10,
+      textStyle: {
+        fontSize: 14,
+        fontWeight: 'bold'
+      }
+    },
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        type: 'shadow'
+      },
+      formatter: function (params) {
+        const data = params[0]
+        return `${data.name}<br/>记录数：${data.value}`
+      }
+    },
+    grid: {
+      left: '3%',
+      right: '4%',
+      bottom: '3%',
+      top: '60px',
+      containLabel: true
+    },
+    xAxis: {
+      type: 'category',
+      data: tableStats.value.map(stat => stat.tableName),
+      axisLabel: {
+        rotate: 45
+      }
+    },
+    yAxis: {
+      type: 'value'
+    },
+    series: [{
+      name: '记录数',
+      type: 'bar',
+      data: tableStats.value.map(stat => stat.recordCount),
+      itemStyle: {
+        color: '#409EFF'
+      },
+      emphasis: {
+        focus: 'series'
+      }
+    }],
+    dataZoom: [{
+      type: 'inside',
+      start: 0,
+      end: 100
+    }, {
+      start: 0,
+      end: 100
+    }]
   }
 
-  const option = {
-      title: {
-        text: '数据库表记录统计',
-        left: 'center',
-        top: 10
-      },
-      tooltip: {
-        trigger: 'axis',
-        axisPointer: {
-          type: 'shadow'
-        }
-      },
-      grid: {
-        left: '3%',
-        right: '4%',
-        bottom: '3%',
-        top: '60px',
-        containLabel: true
-      },
-      xAxis: {
-        type: 'category',
-        data: tableStats.value.map(stat => stat.tableName),
-        axisLabel: {
-          rotate: 45
-        }
-      },
-      yAxis: {
-        type: 'value'
-      },
-      series: [{
-        name: '记录数',
-        type: 'bar',
-        data: tableStats.value.map(stat => stat.recordCount),
-        itemStyle: {
-          color: '#409EFF'
-        },
-        emphasis: {
-          focus: 'series'
-        }
-      }],
-      dataZoom: [{
-        type: 'inside',
-        start: 0,
-        end: 100
-      }, {
-        start: 0,
-        end: 100
-      }]
-    }
-
   recordsChart.setOption(option)
-  
-  // 确保图表正确渷
+  recordsChart.hideLoading()
+
+  // 确保图表正确渲染
   setTimeout(() => {
     recordsChart.resize()
   }, 0)
+
+  // 清除超时检查
+  clearTimeout(timeout)
 }
 
 // 获取数据库列表
@@ -535,9 +594,12 @@ function handleViewTable(tableName) {
 
 const getStatusType = (status) => {
   switch (status) {
-    case 'connected': return 'success'
-    case 'disconnected': return 'error'
-    default: return 'default'
+    case 'connected':
+      return 'success'
+    case 'disconnected':
+      return 'error'
+    default:
+      return 'default'
   }
 }
 

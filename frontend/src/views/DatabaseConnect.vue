@@ -4,112 +4,44 @@
     <n-card title="数据库连接">
       <n-space>
         <n-select
-          v-model:value="selectedConfig"
-          :options="savedConfigs"
-          style="min-width: 200px"
-          placeholder="选择已保存的配置"
+            v-model:value="selectedConfig"
+            :options="savedConfigs"
+            style="min-width: 200px"
+            placeholder="选择已保存的配置"
         />
-        <n-button type="primary" @click="loadConfig" :disabled="!selectedConfig">
-          加载配置
-        </n-button>
         <n-button type="error" @click="deleteConfig" :disabled="!selectedConfig">
-          删除
+          删除连接
         </n-button>
         <n-button type="success" @click="showCreateModal">
-          新建连接
+          创建连接
+        </n-button>
+        <n-button type="success" @click="showCreateModal">
+          修改连接
+        </n-button>
+        <n-button type="primary"  :loading="loading" @click="handleConnect">
+          连接
         </n-button>
       </n-space>
     </n-card>
 
-    <!-- 连接配置表单 -->
-    <n-card v-if="selectedConfig">
-      <template #header>
-        <div class="card-title">{{ config.name }}</div>
-      </template>
-
-      <n-form
-        ref="formRef"
-        :model="config"
-        :rules="rules"
-      >
-        <n-form-item label="数据库类型" path="type">
-          <n-select
-            v-model:value="config.type"
-            :options="dbTypeOptions"
-            placeholder="请选择数据库类型"
-          />
-        </n-form-item>
-
-        <n-form-item label="主机地址" path="host">
-          <n-input
-            v-model:value="config.host"
-            placeholder="请输入主机地址"
-          />
-        </n-form-item>
-
-        <n-form-item label="端口" path="port">
-          <n-input-number
-            v-model:value="config.port"
-            placeholder="请输入端口号"
-          />
-        </n-form-item>
-
-        <n-form-item label="用户名" path="username">
-          <n-input
-            v-model:value="config.username"
-            placeholder="请输入用户名"
-          />
-        </n-form-item>
-
-        <n-form-item label="密码" path="password">
-          <n-input
-            v-model:value="config.password"
-            type="password"
-            placeholder="请输入密码"
-            show-password-on="click"
-          />
-        </n-form-item>
-
-        <n-form-item label="数据库名" path="database">
-          <n-input
-            v-model:value="config.database"
-            placeholder="请输入数据库名"
-          />
-        </n-form-item>
-
-        <n-space justify="end">
-          <n-button @click="saveConfig">
-            保存配置
-          </n-button>
-          <n-button
-            type="primary"
-            :loading="loading"
-            @click="handleConnect"
-          >
-            连接
-          </n-button>
-        </n-space>
-      </n-form>
-    </n-card>
-
     <!-- 创建连接弹窗 -->
     <n-modal
-      v-model:show="showModal"
-      preset="dialog"
-      title="新建连接"
-      :style="{ width: '600px' }"
-      positive-text="确认"
-      negative-text="取消"
-      @positive-click="handleCreateConfig"
-      @negative-click="closeModal"
+        v-model:show="showModal"
+        preset="dialog"
+        title="新建连接"
+        :style="{ width: '600px' }"
+        positive-text="确认"
+        negative-text="取消"
+        @positive-click="handleCreateConfig"
+        @negative-click="closeModal"
     >
       <n-form
-        ref="createFormRef"
-        :model="newConfig"
-        :rules="rules"
-        label-placement="left"
-        label-width="100"
-        require-mark-placement="right-hanging"
+          ref="createFormRef"
+          :model="newConfig"
+          :rules="rules"
+          label-placement="left"
+          label-width="100"
+          require-mark-placement="right-hanging"
       >
         <n-form-item label="配置名称" path="name">
           <n-input v-model:value="newConfig.name" placeholder="请输入配置名称"/>
@@ -117,9 +49,9 @@
 
         <n-form-item label="数据库类型" path="type">
           <n-select
-            v-model:value="newConfig.type"
-            :options="dbTypeOptions"
-            placeholder="请选择数据库类型"
+              v-model:value="newConfig.type"
+              :options="dbTypeOptions"
+              placeholder="请选择数据库类型"
           />
         </n-form-item>
 
@@ -139,10 +71,10 @@
 
         <n-form-item label="密码" path="password">
           <n-input
-            v-model:value="newConfig.password"
-            type="password"
-            show-password-on="click"
-            placeholder="请输入密码"
+              v-model:value="newConfig.password"
+              type="password"
+              show-password-on="click"
+              placeholder="请输入密码"
           />
         </n-form-item>
 
@@ -153,7 +85,7 @@
         <n-divider>SSH 隧道</n-divider>
 
         <n-form-item label="使用 SSH">
-          <n-switch v-model:value="newConfig.useSSH" />
+          <n-switch v-model:value="newConfig.useSSH"/>
         </n-form-item>
 
         <template v-if="newConfig.useSSH">
@@ -180,28 +112,28 @@
 
           <n-form-item v-if="newConfig.ssh.authType === 'password'" label="SSH 密码" path="ssh.password">
             <n-input
-              v-model:value="newConfig.ssh.password"
-              type="password"
-              show-password-on="click"
-              placeholder="SSH 密码"
+                v-model:value="newConfig.ssh.password"
+                type="password"
+                show-password-on="click"
+                placeholder="SSH 密码"
             />
           </n-form-item>
 
           <template v-else>
             <n-form-item label="私钥文件" path="ssh.privateKey">
               <n-input
-                v-model:value="newConfig.ssh.privateKey"
-                type="textarea"
-                placeholder="请输入私钥内容"
+                  v-model:value="newConfig.ssh.privateKey"
+                  type="textarea"
+                  placeholder="请输入私钥内容"
               />
             </n-form-item>
 
             <n-form-item label="私钥密码" path="ssh.passphrase">
               <n-input
-                v-model:value="newConfig.ssh.passphrase"
-                type="password"
-                show-password-on="click"
-                placeholder="私钥密码（如果有）"
+                  v-model:value="newConfig.ssh.passphrase"
+                  type="password"
+                  show-password-on="click"
+                  placeholder="私钥密码（如果有）"
               />
             </n-form-item>
           </template>
@@ -210,31 +142,28 @@
     </n-modal>
 
     <!-- 显示连接状态 -->
-    <n-tag v-if="connectionStatus[config.name]" :type="getStatusType(connectionStatus[config.name])">
-      {{ connectionStatus[config.name] }}
-    </n-tag>
+<!--    <n-tag v-if="connectionStatus[selectedConfig.name]" :type="getStatusType(connectionStatus[selectedConfig.name])">-->
+<!--      {{ connectionStatus[selectedConfig.name] }}-->
+<!--    </n-tag>-->
   </n-space>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
-import { useMessage } from 'naive-ui'
-import { 
-  ConnectDatabase, 
-  DisconnectDatabase, 
-  ExecuteQuery,
-  LoadConfigurations,
-  SaveConfiguration,
+import {onMounted, onUnmounted, ref} from 'vue'
+import {useMessage} from 'naive-ui'
+import {
+  ConnectDatabase,
   DeleteConfiguration,
-  TestConnection
+  DisconnectDatabase,
+  LoadConfigurations,
+  SaveConfiguration
 } from '../../wailsjs/go/main/App'
-import { EventsOn, EventsOff } from '../../wailsjs/runtime/runtime'
-import { useRouter } from 'vue-router'
-import { useMenuStore } from '../stores/menuStore'
+import {EventsOff, EventsOn} from '../../wailsjs/runtime/runtime'
+import {useRouter} from 'vue-router'
+import {useMenuStore} from '../stores/menuStore'
 
 const message = useMessage()
 const loading = ref(false)
-const formRef = ref(null)
 const createFormRef = ref(null)
 const selectedConfig = ref(null)
 const savedConfigs = ref([])
@@ -244,9 +173,10 @@ const router = useRouter()
 const menuStore = useMenuStore()
 
 const dbTypeOptions = [
-  { label: 'MySQL', value: 'mysql' },
-  { label: 'PostgreSQL', value: 'postgresql' },
-  { label: 'SQLite', value: 'sqlite' }
+  {label: 'MySQL', value: 'mysql'},
+  {label: 'PostgreSQL', value: 'postgresql'},
+  {label: 'SQLite', value: 'sqlite'},
+  {label: 'TdEngine', value: 'TdEngine'},
 ]
 
 // 新的配置模板
@@ -270,18 +200,17 @@ const defaultConfig = {
   }
 }
 
-const config = ref({ ...defaultConfig })
-const newConfig = ref({ ...defaultConfig })
+const newConfig = ref({...defaultConfig})
 
 // 表单验证规则
 const rules = {
-  name: { required: true, message: '请输入配置名称' },
-  type: { required: true, message: '请选择数据库类型' },
-  host: { required: true, message: '请输入主机地址' },
-  port: { required: true, message: '请输入端口号' },
-  username: { required: true, message: '请输入用户名' },
-  'ssh.host': { 
-    required: true, 
+  name: {required: true, message: '请输入配置名称'},
+  type: {required: true, message: '请选择数据库类型'},
+  host: {required: true, message: '请输入主机地址'},
+  port: {required: true, message: '请输入端口号'},
+  username: {required: true, message: '请输入用户名'},
+  'ssh.host': {
+    required: true,
     message: '请输入 SSH 主机地址',
     trigger: 'blur',
     validator: (rule, value) => {
@@ -289,8 +218,8 @@ const rules = {
       return !newConfig.value.useSSH || !!value
     }
   },
-  'ssh.port': { 
-    required: true, 
+  'ssh.port': {
+    required: true,
     message: '请输入 SSH 端口号',
     trigger: 'blur',
     validator: (rule, value) => {
@@ -298,8 +227,8 @@ const rules = {
       return !newConfig.value.useSSH || !!value
     }
   },
-  'ssh.username': { 
-    required: true, 
+  'ssh.username': {
+    required: true,
     message: '请输入 SSH 用户名',
     trigger: 'blur',
     validator: (rule, value) => {
@@ -331,8 +260,8 @@ function setupEventListeners(configName) {
     console.log('Tables:', tables)
     router.push({
       name: 'DatabaseInfo',
-      params: { dbName: configName },
-      query: { tables: tables.join(',') }
+      params: {dbName: configName},
+      query: {tables: tables.join(',')}
     })
   })
 
@@ -341,8 +270,8 @@ function setupEventListeners(configName) {
     console.log('DatabaseName:', databaseName)
     router.push({
       name: 'DatabaseInfo',
-      params: { dbName: configName },
-      query: { database: databaseName }
+      params: {dbName: configName},
+      query: {database: databaseName}
     })
   })
 }
@@ -357,7 +286,7 @@ function cleanupEventListeners(configName) {
 // 显示创建弹窗
 function showCreateModal() {
   showModal.value = true
-  newConfig.value = { ...defaultConfig }
+  newConfig.value = {...defaultConfig}
 }
 
 // 关闭弹窗
@@ -418,7 +347,7 @@ async function deleteConfig() {
 async function handleCreateConfig() {
   try {
     await createFormRef.value?.validate()
-    
+
     if (savedConfigs.value.some(c => c.config.name === newConfig.value.name)) {
       message.error('配置名称已存在')
       return false
@@ -432,7 +361,7 @@ async function handleCreateConfig() {
     await loadSavedConfigs()
     message.success('配置已创建')
     selectedConfig.value = newConfig.value.name
-    config.value = { ...newConfig.value }
+    config.value = {...newConfig.value}
     showModal.value = false
     return true
   } catch (error) {
@@ -452,10 +381,10 @@ async function handleCreateConfig() {
 // 加载选中的配置
 function loadConfig() {
   if (!selectedConfig.value) return
-  
+
   const selected = savedConfigs.value.find(c => c.value === selectedConfig.value)
   if (selected) {
-    config.value = { ...selected.config }
+    config.value = {...selected.config}
     message.success('配置已加载')
   }
 }
@@ -478,42 +407,36 @@ const getStatusType = (status) => {
 async function handleConnect() {
   try {
     loading.value = true
-    await formRef.value?.validate()
-    
-    if (!config.value.name) {
-      message.error('配置名称不能为空')
-      return
-    }
-    
-    setupEventListeners(config.value.name)
-    connectionStatus.value[config.value.name] = 'connecting'
-    
+    console.log(selectedConfig.value)
+    setupEventListeners(selectedConfig.value)
+    connectionStatus.value[selectedConfig.value] = 'connecting'
+
     // 建立连接
-    await ConnectDatabase(config.value)
-    
+    await ConnectDatabase(selectedConfig.value)
+
     // 添加到活跃连接菜单
     menuStore.addActiveConnection({
-      label: config.value.name,
-      key: `active-connection-${config.value.name}`,
-      path: `/connection/${config.value.name}`,
+      label: selectedConfig.value,
+      key: `active-connection-${selectedConfig.value}`,
+      path: `/connection/${selectedConfig.value}`,
       icon: 'database',
-      defaultDB: config.value.database || ''
+      defaultDB: selectedConfig.value || ''
     })
 
     // 跳转到新连接页面，并传递默认数据库信息
     router.push({
       name: 'ActiveConnection',
-      params: { 
-        name: config.value.name,
+      params: {
+        name: selectedConfig.value,
       },
       query: {
-        defaultDB: config.value.database || ''
+        defaultDB: selectedConfig.value || ''
       }
     })
-    
+
   } catch (error) {
     message.error('连接失败：' + error)
-    connectionStatus.value[config.value.name] = 'disconnected'
+    connectionStatus.value[selectedConfig.value] = 'disconnected'
   } finally {
     loading.value = false
   }

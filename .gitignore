@@ -4,3 +4,4 @@ frontend/dist
 .clinerules
 dist/
 node_modules/
+.DS_Store

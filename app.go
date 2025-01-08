@@ -141,19 +141,15 @@ func (a *App) TestConnection(dbConfig config.DBConfig) error {
 	return nil
 }
 
-func (a *App) ConnectDatabase(dbConfig config.DBConfig) error {
-	// 如果已经存在连接，先关闭
-	if existingConn, ok := a.dbConns[dbConfig.Name]; ok {
-		err := existingConn.Close()
-		if err != nil {
-			return err
-		}
-		delete(a.dbConns, dbConfig.Name)
+func (a *App) ConnectDatabase(configName string) error {
+
+	dbConfig, err2 := config.GetConfig(configName)
+	if err2 != nil {
+		return err2
 	}
 	var dsn string
 	host := dbConfig.Host
 	port := dbConfig.Port
-
 	// 如果使用 SSH 隧道
 	if dbConfig.UseSSH {
 		tunnel, err := ssh.NewTunnel(

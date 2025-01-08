@@ -9,7 +9,7 @@ import (
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/logger"
 	"github.com/wailsapp/wails/v2/pkg/options"
-	// "github.com/wailsapp/wails/v2/pkg/options/mac"
+	"github.com/wailsapp/wails/v2/pkg/options/mac"
 )
 
 //go:embed frontend/dist
@@ -25,7 +25,7 @@ func main() {
 	// 运行应用
 	err := wails.Run(&options.App{
 		Title:              "AuroraDB",
-		Width:              1024,
+		Width:              1280,
 		Height:             700,
 		Assets:             assets,
 		BackgroundColour:   &options.RGBA{R: 255, G: 255, B: 255, A: 1},
@@ -36,19 +36,16 @@ func main() {
 			app,
 		},
 		// Mac 特定配置
-		// Mac: &mac.Options{
-		// 	TitleBar:   mac.TitleBarHiddenInset(),
-		// 	Appearance: mac.NSAppearanceNameDarkAqua,
-		// 	// WebviewIsTransparent: true,
-		// 	// WindowIsTranslucent:  true,
-		// 	About: &mac.AboutInfo{
-		// 		Title:   "AuroraDB",
-		// 		Message: "© 2024 Database Tool",
-		// 	},
-		// },
+		Mac: &mac.Options{
+			TitleBar:   mac.TitleBarHiddenInset(),
+			Appearance: mac.NSAppearanceNameDarkAqua,
+			About: &mac.AboutInfo{
+				Title:   "AuroraDB",
+				Message: "© 2024 Database Tool",
+			},
+		},
 		HideWindowOnClose: true,
 	})
-
 
 	if err != nil {
 		log.Printf("Error: %v", err)
